@@ -1,0 +1,31 @@
+id: error-based-sql-injection
+
+info:
+  name: Error based SQL injection
+  author: albin
+  severity: high
+  description: SQL injection is a type of attack in which malicious code is inserted into strings that are later passed to a database for execution. 
+  tags: sqli,generic,error
+
+requests:
+  - method: GET
+    path:
+      - "{{BaseURL}}/'"
+
+    matchers-condition: and
+    matchers:
+      - type: regex
+        regex:
+          - "SQL syntax.*?MySQL"
+          - "Warning.*?\\Wmysqli?_"
+          - "MySQLSyntaxErrorException"
+          - "valid MySQL result"
+          - "check the manual that (corresponds to|fits) your MySQL server version"
+          - "Unknown column '[^ ]+' in 'field list'"
+          - "MySqlClient\\."
+          - "com\\.mysql\\.jdbc"
+          - "Zend_Db_(Adapter|Statement)_Mysqli_Exception"
+          - "Pdo[./_\\\\]Mysql"
+          - "MySqlException"
+          - "SQLSTATE\\[\\d+\\]: Syntax error or access violation"
+        condition: or
